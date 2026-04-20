@@ -4,48 +4,60 @@ import pandas as pd
 import xlwings as xw
 import os
 
-# Configurações de Design do Aplicativo
-ctk.set_appearance_mode("System")  # Segue o tema do Windows (Dark ou Light)
-ctk.set_default_color_theme("blue") # Cor principal dos botões
+ctk.set_appearance_mode("System")  
+ctk.set_default_color_theme("blue") 
 
 class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
         self.root.title("Gerador de Planilhas SSHD")
-        self.root.geometry("550x320")
-
-        self.root.iconbitmap("icone_estivas.ico")
         
+        self.root.geometry("550x480")
+        self.root.iconbitmap("icone_estivas.ico") # Mantendo o seu ícone
+        
+        # Variáveis dos caminhos e dos novos campos
         self.caminho_base_mae = ctk.StringVar()
+        
         self.setup_ui()
 
     def setup_ui(self):
-        # Frame Principal (O quadrado arredondado no fundo)
         main_frame = ctk.CTkFrame(self.root, corner_radius=15)
         main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        # Título
-        titulo = ctk.CTkLabel(main_frame, text="Selecione o arquivo", font=ctk.CTkFont(size=20, weight="bold"))
-        titulo.pack(pady=(15, 20))
+        titulo = ctk.CTkLabel(main_frame, text="Selecione a Planilha:", font=ctk.CTkFont(size=20, weight="bold"))
+        titulo.pack(pady=(15, 10))
 
-        # Container para a seleção de ficheiro
+        # --- SEÇÃO 1: ARQUIVO ---
         file_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
-        file_frame.pack(fill="x", padx=20)
+        file_frame.pack(fill="x", padx=20, pady=(0, 15))
         
-        # Campo de Texto
         entrada_arquivo = ctk.CTkEntry(file_frame, textvariable=self.caminho_base_mae, placeholder_text="Selecione a planilha mãe...", width=320, height=35)
         entrada_arquivo.pack(side="left", padx=(0, 10))
         
-        # Botão Procurar
         btn_procurar = ctk.CTkButton(file_frame, text="Procurar", command=self.selecionar_arquivo, width=100, height=35)
         btn_procurar.pack(side="right")
 
-        # Botão de Execução Gigante
+        # --- SEÇÃO 2: DADOS DO SOLICITANTE ---
+        dados_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+        dados_frame.pack(fill="x", padx=20)
+        
+        ctk.CTkLabel(dados_frame, text="Dados do Solicitante (Repetidos em todas as abas):", font=ctk.CTkFont(size=12, weight="bold")).pack(anchor="w", pady=(0, 5))
+        
+        # Campos de entrada
+        self.entrada_nome = ctk.CTkEntry(dados_frame, placeholder_text="Nome do Solicitante (Ex: Alexandre Siqueira...)", height=30)
+        self.entrada_nome.pack(fill="x", pady=3)
+        
+        self.entrada_sshd = ctk.CTkEntry(dados_frame, placeholder_text="SSHD (Ex: X0801681)", height=30)
+        self.entrada_sshd.pack(fill="x", pady=3)
+        
+        self.entrada_cargo = ctk.CTkEntry(dados_frame, placeholder_text="Cargo (Ex: ANALISTA DE SUPORTE I)", height=30)
+        self.entrada_cargo.pack(fill="x", pady=3)
+
+        # --- BOTÃO EXECUTAR ---
         self.btn_executar = ctk.CTkButton(main_frame, text="GERAR FICHAS", command=self.executar_processo, 
                                           font=ctk.CTkFont(size=15, weight="bold"), height=45, fg_color="#28a745", hover_color="#218838")
-        self.btn_executar.pack(pady=(30, 10))
+        self.btn_executar.pack(pady=(20, 10))
 
-        # Status
         self.status_label = ctk.CTkLabel(main_frame, text="Aguardando início...", text_color="gray")
         self.status_label.pack()
 
@@ -72,6 +84,11 @@ class AutomacaoFichas:
                 messagebox.showerror("Erro", "Arquivo 'TEMPLATE_NOVO.xlsx' não encontrado na pasta do programa.")
                 return
 
+        # Captura os dados digitados na interface
+        nome_solic = self.entrada_nome.get()
+        sshd_solic = self.entrada_sshd.get()
+        cargo_solic = self.entrada_cargo.get()
+
         self.status_label.configure(text="Processando... por favor, aguarde.", text_color="#17a2b8")
         self.root.update()
 
@@ -87,23 +104,12 @@ class AutomacaoFichas:
             aba_template = wb.sheets['SSHD']
 
             mapeamento = {
-                "Nome Colaborador": "B11",
-                "Data Nascimento": "B12",
-                "CPF": "B13",
-                "Estado Civil": "B16",
-                "Nome Completo da Mãe": "B17",
-                "Nacionalidade": "B18",
-                "Naturalidade": "B19",
-                "E-MAIL": "B20",
-                "Endereço": "B22",
-                "Nº": "B23",
-                "Complemento": "B24",
-                "Bairro": "B25",
-                "Cidade": "B26",
-                "UF": "B27",
-                "CEP": "B28",
-                "Cargo": "B31", 
-                "Registro do Funcionário": "B32"
+                "Nome Colaborador": "B11", "Data Nascimento": "B12", "CPF": "B13",
+                "Estado Civil": "B16", "Nome Completo da Mãe": "B17", "Nacionalidade": "B18",
+                "Naturalidade": "B19", "E-MAIL": "B20", "Endereço": "B22",
+                "Nº": "B23", "Complemento": "B24", "Bairro": "B25",
+                "Cidade": "B26", "UF": "B27", "CEP": "B28",
+                "Cargo": "B31", "Registro do Funcionário": "B32"
             }
 
             for index, row in df.iterrows():
@@ -125,6 +131,14 @@ class AutomacaoFichas:
                 nova_aba.range('B37').value = "COMPLEXO HOSPITALAR DOS ESTIVADORES"
                 nova_aba.range('B38').value = "SMS"
 
+                # === INSERINDO OS DADOS DO SOLICITANTE ===
+                if nome_solic:
+                    nova_aba.range('B5').value = nome_solic
+                if sshd_solic:
+                    nova_aba.range('B6').value = sshd_solic
+                if cargo_solic:
+                    nova_aba.range('B7').value = cargo_solic
+
             aba_template.delete()
             wb.sheets[0].activate()
             
@@ -144,6 +158,6 @@ class AutomacaoFichas:
             app.quit()
 
 if __name__ == "__main__":
-    root = ctk.CTk() # A janela principal agora é do CustomTkinter
+    root = ctk.CTk()
     app_gui = AutomacaoFichas(root)
     root.mainloop()
