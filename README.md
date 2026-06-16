@@ -32,8 +32,8 @@ Os campos abaixo sao preenchidos automaticamente em todas as fichas:
 | Nome completo | Nome Colaborador |
 | Data de nascimento | Data Nascimento |
 | CPF | CPF |
-| Genero | Sexo |
-| Orientacao Sexual | Valor padrao: Nao Informado |
+| Genero | Valor fixo: não informado |
+| Orientacao Sexual | Valor fixo: não informado |
 | Estado Civil | Estado Civil |
 | Nome da mae | Nome Completo da Mae |
 | Nacionalidade | Nacionalidade |
@@ -49,6 +49,9 @@ Os campos abaixo sao preenchidos automaticamente em todas as fichas:
 | Regime | Valor padrao: CLT |
 | Cargo/funcao | Cargo |
 | Registro | Registro do Funcionario |
+
+Os campos `Genero` e `Orientacao Sexual` sao sempre preenchidos como
+`não informado`, independentemente do conteudo da planilha de origem.
 
 ## Como executar em modo desenvolvimento
 

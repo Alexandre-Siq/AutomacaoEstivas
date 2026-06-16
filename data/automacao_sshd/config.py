@@ -84,8 +84,8 @@ CAMPOS_OBRIGATORIOS_PREFEITURA = {
     "registro": "Registro",
 }
 
-VALORES_PADRAO = {
-    "genero": "Nao informado",
-    "orientacao_sexual": "Nao Informado",
+VALORES_AUTOMATICOS = {
+    "genero": "não informado",
+    "orientacao_sexual": "não informado",
     "regime": "CLT",
 }

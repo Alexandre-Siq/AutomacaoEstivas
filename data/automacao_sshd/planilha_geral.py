@@ -6,7 +6,7 @@ from typing import Any
 from openpyxl import load_workbook
 from openpyxl.utils.cell import column_index_from_string
 
-from .config import COLUNAS_PLANILHA_GERAL, VALORES_PADRAO
+from .config import COLUNAS_PLANILHA_GERAL, VALORES_AUTOMATICOS
 from .exceptions import ErroLeituraPlanilha
 from .normalizacao import limpar_cabecalho, valor_excel, valor_vazio
 
@@ -62,11 +62,9 @@ def ler_planilha_geral(caminho_planilha: str | Path) -> list[dict[str, Any]]:
         if all(valor_vazio(valor) for valor in registro.values()):
             continue
 
-        # A Prefeitura exige estes campos, mas eles nao existem explicitamente
-        # na Planilha Geral enviada; por isso entram como regra inicial.
-        for campo, valor_padrao in VALORES_PADRAO.items():
-            if valor_vazio(registro.get(campo)):
-                registro[campo] = valor_padrao
+        # Campos definidos por regra de negocio. Genero e Orientacao Sexual
+        # nao devem vir da planilha de origem.
+        registro.update(VALORES_AUTOMATICOS)
 
         registro["linha_origem"] = numero_linha
         colaboradores.append(registro)
