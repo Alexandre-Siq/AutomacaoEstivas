@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
-from openpyxl.utils.cell import column_index_from_string
 
-from .config import COLUNAS_PLANILHA_GERAL, VALORES_AUTOMATICOS
+from .config import COLUNAS_FONTE_DADOS, VALORES_FIXOS_CAMPOS, VALORES_PADRAO
 from .exceptions import ErroLeituraPlanilha
 from .normalizacao import limpar_cabecalho, normalizar_texto, valor_excel, valor_vazio
 
@@ -33,6 +33,7 @@ CABECALHOS_OBRIGATORIOS = {
         "cargo",
         "cargo_funcao",
         "cargo_ou_funcao",
+        "especialidade",
         "funcao",
     },
 }
@@ -44,6 +45,17 @@ def _cabecalhos_da_linha(worksheet, numero_linha: int) -> set[str]:
         for coluna in range(1, worksheet.max_column + 1)
         if not valor_vazio(worksheet.cell(numero_linha, coluna).value)
     }
+
+
+def _mapear_cabecalhos(worksheet, numero_linha: int) -> dict[str, list[int]]:
+    cabecalhos: dict[str, list[int]] = {}
+
+    for coluna in range(1, worksheet.max_column + 1):
+        chave = limpar_cabecalho(worksheet.cell(numero_linha, coluna).value)
+        if chave:
+            cabecalhos.setdefault(chave, []).append(coluna)
+
+    return cabecalhos
 
 
 def _linha_tem_cabecalhos_obrigatorios(cabecalhos: set[str]) -> bool:
@@ -90,9 +102,96 @@ def _encontrar_planilha_e_linha_cabecalho(workbook) -> tuple[Any, int]:
     )
 
 
-def _ler_por_letra(row: int, worksheet, letra_coluna: str) -> Any:
-    indice_coluna = column_index_from_string(letra_coluna)
-    return valor_excel(worksheet.cell(row, indice_coluna).value)
+def _primeira_coluna(
+    mapa_cabecalhos: dict[str, list[int]],
+    aliases: set[str],
+    *,
+    apos_coluna: int | None = None,
+) -> int | None:
+    candidatas: list[int] = []
+
+    for alias in aliases:
+        candidatas.extend(mapa_cabecalhos.get(alias, []))
+
+    candidatas = sorted(set(candidatas))
+    if apos_coluna is not None:
+        posteriores = [coluna for coluna in candidatas if coluna > apos_coluna]
+        if posteriores:
+            return posteriores[0]
+
+    return candidatas[0] if candidatas else None
+
+
+def _montar_mapa_colunas(mapa_cabecalhos: dict[str, list[int]]) -> dict[str, int]:
+    colunas: dict[str, int] = {}
+
+    for campo, aliases in COLUNAS_FONTE_DADOS.items():
+        if campo == "numero":
+            continue
+
+        coluna = _primeira_coluna(mapa_cabecalhos, aliases)
+        if coluna is not None:
+            colunas[campo] = coluna
+
+    coluna_logradouro = colunas.get("logradouro")
+    coluna_numero = _primeira_coluna(
+        mapa_cabecalhos,
+        COLUNAS_FONTE_DADOS["numero"],
+        apos_coluna=coluna_logradouro,
+    )
+    if coluna_numero is not None:
+        colunas["numero"] = coluna_numero
+
+    return colunas
+
+
+def _separar_logradouro(valor: Any) -> tuple[Any, Any, Any]:
+    texto = normalizar_texto(valor)
+    if not texto:
+        return None, None, None
+
+    padroes = [
+        r"^(?P<logradouro>.+?)(?:,\s*)?(?:n[ºo°.]?|numero|número)\s*"
+        r"(?P<numero>\d+[A-Za-z0-9/-]*)(?:\s*[-,]\s*(?P<complemento>.+))?$",
+        r"^(?P<logradouro>.+?),\s*(?P<numero>\d+[A-Za-z0-9/-]*)"
+        r"(?:\s*[-,]\s*(?P<complemento>.+))?$",
+    ]
+
+    for padrao in padroes:
+        resultado = re.match(padrao, texto, flags=re.IGNORECASE)
+        if resultado:
+            return (
+                normalizar_texto(resultado.group("logradouro")),
+                normalizar_texto(resultado.group("numero")),
+                normalizar_texto(resultado.group("complemento")),
+            )
+
+    return texto, None, None
+
+
+def _ler_registro(row: int, worksheet, colunas: dict[str, int]) -> dict[str, Any]:
+    registro = {
+        campo: valor_excel(worksheet.cell(row, coluna).value)
+        for campo, coluna in colunas.items()
+    }
+
+    logradouro, numero_extraido, complemento_extraido = _separar_logradouro(
+        registro.get("logradouro")
+    )
+    if logradouro:
+        registro["logradouro"] = logradouro
+    if valor_vazio(registro.get("numero")) and numero_extraido:
+        registro["numero"] = numero_extraido
+    if valor_vazio(registro.get("complemento")) and complemento_extraido:
+        registro["complemento"] = complemento_extraido
+
+    registro.update(VALORES_FIXOS_CAMPOS)
+
+    for campo, valor_padrao in VALORES_PADRAO.items():
+        if valor_vazio(registro.get(campo)):
+            registro[campo] = valor_padrao
+
+    return registro
 
 
 def ler_planilha_geral(caminho_planilha: str | Path) -> list[dict[str, Any]]:
@@ -109,22 +208,17 @@ def ler_planilha_geral(caminho_planilha: str | Path) -> list[dict[str, Any]]:
         raise ErroLeituraPlanilha(f"Nao foi possivel abrir a planilha de origem: {erro}") from erro
 
     worksheet, linha_cabecalho = _encontrar_planilha_e_linha_cabecalho(workbook)
+    mapa_cabecalhos = _mapear_cabecalhos(worksheet, linha_cabecalho)
+    colunas = _montar_mapa_colunas(mapa_cabecalhos)
     primeira_linha_dados = linha_cabecalho + 1
 
     colaboradores: list[dict[str, Any]] = []
 
     for numero_linha in range(primeira_linha_dados, worksheet.max_row + 1):
-        registro = {
-            campo: _ler_por_letra(numero_linha, worksheet, letra_coluna)
-            for campo, letra_coluna in COLUNAS_PLANILHA_GERAL.items()
-        }
+        registro = _ler_registro(numero_linha, worksheet, colunas)
 
-        if all(valor_vazio(valor) for valor in registro.values()):
+        if all(valor_vazio(registro.get(campo)) for campo in colunas):
             continue
-
-        # Campos definidos por regra de negocio. Genero e Orientacao Sexual
-        # nao devem vir da planilha de origem.
-        registro.update(VALORES_AUTOMATICOS)
 
         registro["linha_origem"] = numero_linha
         colaboradores.append(registro)

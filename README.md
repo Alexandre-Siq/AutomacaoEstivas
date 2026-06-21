@@ -27,31 +27,34 @@ Os campos abaixo sao preenchidos automaticamente em todas as fichas:
 
 ## Mapeamento da Planilha Geral
 
-| Campo Prefeitura | Origem Planilha Geral |
+| Campo Prefeitura | Origem da planilha fonte |
 | --- | --- |
-| Nome completo | Nome Colaborador |
-| Data de nascimento | Data Nascimento |
+| Nome completo | Nome completo / Nome Colaborador |
+| Data de nascimento | Data de nascimento / Data Nascimento |
 | CPF | CPF |
 | Genero | Valor fixo: não informado |
 | Orientacao Sexual | Valor fixo: não informado |
 | Estado Civil | Estado Civil |
-| Nome da mae | Nome Completo da Mae |
+| Nome da mae | Nome da mãe / Nome Completo da Mae |
 | Nacionalidade | Nacionalidade |
 | Naturalidade | Naturalidade |
-| Email profissional | E-MAIL |
-| Logradouro | Endereco |
-| Numero | Nº da coluna Q |
+| Email profissional | E-mail / E-MAIL |
+| Logradouro | Logradouro / Endereco |
+| Numero | Nº ou extraido do Logradouro |
 | Complemento | Complemento |
 | Bairro | Bairro |
 | Cidade | Cidade |
-| Estado | UF |
+| Estado | Estado / UF |
 | CEP | CEP |
-| Regime | Valor padrao: CLT |
-| Cargo/funcao | Cargo |
-| Registro | Registro do Funcionario |
+| Regime | Tipo de Prestador; se ausente, CLT |
+| Cargo/funcao | Especialidade / Cargo |
+| Registro | CRM / Registro do Funcionario / Cadastro MV |
 
 Os campos `Genero` e `Orientacao Sexual` sao sempre preenchidos como
 `não informado`, independentemente do conteudo da planilha de origem.
+
+O arquivo `data/exemplo_fonte_dados.xlsx` representa o formato atualmente
+esperado para a fonte de dados.
 
 ## Como executar em modo desenvolvimento
 

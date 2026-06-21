@@ -5,25 +5,94 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_PADRAO = BASE_DIR / "TEMPLATE_NOVO.xlsx"
 ABA_TEMPLATE = "SSHD"
 
-COLUNAS_PLANILHA_GERAL = {
-    "registro": "B",
-    "nome_completo": "C",
-    "data_nascimento": "D",
-    "genero": "E",
-    "estado_civil": "F",
-    "naturalidade": "G",
-    "nacionalidade": "H",
-    "cpf": "I",
-    "cargo_funcao": "J",
-    "nome_mae": "O",
-    "logradouro": "P",
-    "numero": "Q",
-    "complemento": "R",
-    "bairro": "S",
-    "cidade": "T",
-    "estado": "U",
-    "cep": "V",
-    "email_profissional": "AC",
+COLUNAS_FONTE_DADOS = {
+    "registro": {
+        "cadastro_mv",
+        "crm",
+        "crm_",
+        "registro",
+        "registro_do_funcionario",
+        "registro_funcionario",
+    },
+    "nome_completo": {
+        "colaborador",
+        "funcionario",
+        "nome",
+        "nome_colaborador",
+        "nome_completo",
+        "nome_do_colaborador",
+        "nome_do_funcionario",
+        "nome_funcionario",
+    },
+    "data_nascimento": {
+        "data_de_nascimento",
+        "data_nascimento",
+        "dt_nascimento",
+        "nascimento",
+    },
+    "estado_civil": {
+        "estado_civil",
+    },
+    "naturalidade": {
+        "naturalidade",
+    },
+    "nacionalidade": {
+        "nacionalidade",
+    },
+    "cpf": {
+        "cpf",
+        "cpf_colaborador",
+        "cpf_do_colaborador",
+        "cpf_funcionario",
+    },
+    "cargo_funcao": {
+        "cargo",
+        "cargo_funcao",
+        "cargo_ou_funcao",
+        "especialidade",
+        "funcao",
+    },
+    "nome_mae": {
+        "mae",
+        "nome_completo_da_mae",
+        "nome_da_mae",
+        "nome_de_mae",
+    },
+    "logradouro": {
+        "endereco",
+        "logradouro",
+    },
+    "numero": {
+        "n",
+        "no",
+        "numero",
+    },
+    "complemento": {
+        "complemento",
+    },
+    "bairro": {
+        "bairro",
+    },
+    "cidade": {
+        "cidade",
+    },
+    "estado": {
+        "estado",
+        "uf",
+    },
+    "cep": {
+        "cep",
+    },
+    "email_profissional": {
+        "e_mail",
+        "email",
+        "mail",
+    },
+    "regime": {
+        "regime",
+        "tipo_de_prestador",
+        "tipo_prestador",
+    },
 }
 
 CELULAS_PREFEITURA = {
@@ -84,8 +153,11 @@ CAMPOS_OBRIGATORIOS_PREFEITURA = {
     "registro": "Registro",
 }
 
-VALORES_AUTOMATICOS = {
+VALORES_FIXOS_CAMPOS = {
     "genero": "não informado",
     "orientacao_sexual": "não informado",
+}
+
+VALORES_PADRAO = {
     "regime": "CLT",
 }
