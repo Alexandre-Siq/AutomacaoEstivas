@@ -94,7 +94,7 @@ def _encontrar_planilha_e_linha_cabecalho(workbook) -> tuple[Any, int]:
 
     amostras = _descrever_linhas_lidas(workbook)
     raise ErroLeituraPlanilha(
-        "Nao foi possivel localizar o cabecalho da Planilha Geral. "
+        "Não foi possível localizar o cabeçalho da planilha fonte. "
         "Procurei por colunas equivalentes a Nome Colaborador, CPF e Cargo "
         f"nas primeiras {LIMITE_BUSCA_CABECALHO} linhas de todas as abas.\n\n"
         "Amostra do que foi encontrado:\n"
@@ -198,14 +198,14 @@ def ler_planilha_geral(caminho_planilha: str | Path) -> list[dict[str, Any]]:
     caminho = Path(caminho_planilha)
 
     if not caminho.exists():
-        raise ErroLeituraPlanilha(f"Planilha nao encontrada: {caminho}")
+        raise ErroLeituraPlanilha(f"Planilha não encontrada: {caminho}")
     if caminho.suffix.lower() != ".xlsx":
         raise ErroLeituraPlanilha("Nesta etapa inicial, selecione uma planilha no formato .xlsx.")
 
     try:
         workbook = load_workbook(caminho, data_only=True, read_only=False)
     except Exception as erro:
-        raise ErroLeituraPlanilha(f"Nao foi possivel abrir a planilha de origem: {erro}") from erro
+        raise ErroLeituraPlanilha(f"Não foi possível abrir a planilha de origem: {erro}") from erro
 
     worksheet, linha_cabecalho = _encontrar_planilha_e_linha_cabecalho(workbook)
     mapa_cabecalhos = _mapear_cabecalhos(worksheet, linha_cabecalho)
