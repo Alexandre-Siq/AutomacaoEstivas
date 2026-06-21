@@ -19,6 +19,11 @@ COR_TEXTO = "#f4f7f5"
 COR_TEXTO_SECUNDARIO = "#9fb3a7"
 COR_ALERTA = "#f97316"
 COR_ERRO = "#ef4444"
+FONTE_PADRAO = "Oswald"
+
+
+def fonte(tamanho, peso="normal"):
+    return ctk.CTkFont(family=FONTE_PADRAO, size=tamanho, weight=peso)
 
 
 def caminho_recurso(nome_arquivo):
@@ -30,7 +35,7 @@ class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
         self.root.title("Automacao SSHD")
-        self.root.geometry("640x520")
+        self.root.geometry("680x560")
         self.root.resizable(False, False)
         self.root.configure(fg_color=COR_FUNDO)
 
@@ -67,14 +72,14 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             marca,
             text="SSHD",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=fonte(13, "bold"),
             text_color="#052e16",
         ).place(relx=0.5, rely=0.5, anchor="center")
 
         ctk.CTkLabel(
             header,
             text="Gerador de Fichas SSHD",
-            font=ctk.CTkFont(size=24, weight="bold"),
+            font=fonte(26, "bold"),
             text_color=COR_TEXTO,
             anchor="w",
         ).grid(row=0, column=1, sticky="sw")
@@ -82,7 +87,7 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             header,
             text="Selecione a fonte, informe o solicitante e gere o arquivo final.",
-            font=ctk.CTkFont(size=12),
+            font=fonte(13),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
         ).grid(row=1, column=1, sticky="nw", pady=(2, 0))
@@ -94,7 +99,7 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             card,
             text="Planilha fonte",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=fonte(15, "bold"),
             text_color=COR_TEXTO,
             anchor="w",
         ).grid(row=0, column=0, columnspan=2, sticky="ew", padx=16, pady=(14, 8))
@@ -109,6 +114,7 @@ class AutomacaoFichas:
             border_color=COR_BORDA,
             text_color=COR_TEXTO,
             placeholder_text_color=COR_TEXTO_SECUNDARIO,
+            font=fonte(13),
         )
         self.entrada_arquivo.grid(row=1, column=0, sticky="ew", padx=(16, 10), pady=(0, 16))
 
@@ -122,7 +128,7 @@ class AutomacaoFichas:
             fg_color=COR_VERDE,
             hover_color=COR_VERDE_ESCURO,
             text_color="#052e16",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=fonte(14, "bold"),
         ).grid(row=1, column=1, padx=(0, 16), pady=(0, 16))
 
     def _montar_card_solicitante(self, parent):
@@ -133,7 +139,7 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             card,
             text="Dados do solicitante",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=fonte(15, "bold"),
             text_color=COR_TEXTO,
             anchor="w",
         ).grid(row=0, column=0, columnspan=3, sticky="ew", padx=16, pady=(14, 8))
@@ -159,7 +165,7 @@ class AutomacaoFichas:
             border_width=1,
             border_color=COR_BORDA,
             text_color=COR_TEXTO,
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=fonte(14, "bold"),
         )
         self.btn_limpar.grid(row=0, column=0, sticky="w")
 
@@ -173,7 +179,7 @@ class AutomacaoFichas:
             fg_color=COR_VERDE,
             hover_color=COR_VERDE_ESCURO,
             text_color="#052e16",
-            font=ctk.CTkFont(size=15, weight="bold"),
+            font=fonte(16, "bold"),
         )
         self.btn_executar.grid(row=0, column=1, sticky="e")
 
@@ -184,7 +190,7 @@ class AutomacaoFichas:
         self.status_label = ctk.CTkLabel(
             status_card,
             text="Pronto para iniciar.",
-            font=ctk.CTkFont(size=12),
+            font=fonte(13),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
         )
@@ -203,7 +209,7 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             status_card,
             text="Template preservado | Genero e orientacao sexual: não informado",
-            font=ctk.CTkFont(size=11),
+            font=fonte(12),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
         ).grid(row=2, column=0, sticky="ew", padx=14, pady=(0, 10))
@@ -225,7 +231,7 @@ class AutomacaoFichas:
         ctk.CTkLabel(
             parent,
             text=rotulo,
-            font=ctk.CTkFont(size=12, weight="bold"),
+            font=fonte(13, "bold"),
             text_color=COR_TEXTO,
             anchor="w",
         ).grid(row=1, column=coluna, sticky="ew", padx=padx, pady=(0, 5))
@@ -239,6 +245,7 @@ class AutomacaoFichas:
             border_color=COR_BORDA,
             text_color=COR_TEXTO,
             placeholder_text_color=COR_TEXTO_SECUNDARIO,
+            font=fonte(13),
         )
         entrada.grid(row=2, column=coluna, sticky="ew", padx=padx, pady=(0, 16))
         return entrada
