@@ -18,7 +18,7 @@ Esta primeira versão implementa o fluxo da **planilha fonte**:
 6. Cada aba preserva o layout do template `data/TEMPLATE_NOVO.xlsx`.
 
 A interface utiliza tema escuro com destaque verde, fonte Oswald e janela fixa
-compacta de 680x660, com status de processamento, ação para limpar os campos
+compacta de 680x700, com status de processamento, ação para limpar os campos
 antes de uma nova geração e o crédito `Desenvolvido por Alexandre Siqueira -
 Analista de Suporte`.
 

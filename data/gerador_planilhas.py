@@ -38,7 +38,7 @@ class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
         self.root.title("Automação SSHD")
-        self.root.geometry("680x660")
+        self.root.geometry("680x700")
         self.root.resizable(False, False)
         self.root.configure(fg_color=COR_FUNDO)
 
@@ -278,14 +278,6 @@ class AutomacaoFichas:
         )
         self.progress_bar.grid(row=1, column=0, sticky="ew", padx=14, pady=(0, 10))
         self.progress_bar.set(0)
-
-        ctk.CTkLabel(
-            status_card,
-            text="Template preservado | Gênero e orientação sexual: não informado",
-            font=fonte(12),
-            text_color=COR_TEXTO_SECUNDARIO,
-            anchor="w",
-        ).grid(row=2, column=0, sticky="ew", padx=14, pady=(0, 10))
 
     def _criar_card(self, parent, row, pady=(0, 12)):
         card = ctk.CTkFrame(
