@@ -7,7 +7,12 @@ from .config import TEMPLATE_PADRAO
 from .normalizacao import nome_arquivo_seguro
 from .planilha_geral import ler_planilha_geral
 from .prefeitura_writer import preencher_template_prefeitura
-from .validacao import validar_campos_solicitante, validar_colaboradores
+from .relatorio_validacao import gerar_relatorio_validacao
+from .validacao import (
+    coletar_pendencias_colaboradores,
+    validar_campos_solicitante,
+    validar_colaboradores,
+)
 
 
 @dataclass(frozen=True)
@@ -20,6 +25,7 @@ class DadosSolicitante:
 @dataclass(frozen=True)
 class ResultadoGeracao:
     caminho_saida: Path
+    caminho_relatorio: Path
     total_colaboradores: int
 
 
@@ -33,12 +39,26 @@ def gerar_fichas_sshd(
     validar_campos_solicitante(solicitante.nome, solicitante.sshd, solicitante.cargo)
 
     colaboradores = ler_planilha_geral(caminho_planilha_geral)
-    validar_colaboradores(colaboradores)
 
     caminho_origem = Path(caminho_planilha_geral)
     if caminho_saida is None:
         nome_saida = f"{nome_arquivo_seguro(caminho_origem.stem)}_SSHD.xlsx"
         caminho_saida = caminho_origem.with_name(nome_saida)
+    caminho_saida = Path(caminho_saida)
+
+    caminho_relatorio = caminho_saida.with_name(f"{caminho_saida.stem}_RELATORIO_VALIDACAO.xlsx")
+    pendencias = coletar_pendencias_colaboradores(colaboradores)
+    caminho_relatorio_gerado = gerar_relatorio_validacao(
+        caminho_relatorio=caminho_relatorio,
+        colaboradores=colaboradores,
+        pendencias=pendencias,
+        caminho_fonte=caminho_origem,
+    )
+
+    try:
+        validar_colaboradores(colaboradores, pendencias)
+    except Exception as erro:
+        raise type(erro)(f"{erro}\n\nRelatório de validação salvo em:\n{caminho_relatorio_gerado}") from erro
 
     caminho_gerado = preencher_template_prefeitura(
         caminho_template=caminho_template,
@@ -51,5 +71,6 @@ def gerar_fichas_sshd(
 
     return ResultadoGeracao(
         caminho_saida=caminho_gerado,
+        caminho_relatorio=caminho_relatorio_gerado,
         total_colaboradores=len(colaboradores),
     )

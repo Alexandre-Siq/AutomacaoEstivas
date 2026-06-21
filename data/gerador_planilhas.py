@@ -1,3 +1,5 @@
+import os
+import subprocess
 import sys
 from pathlib import Path
 from tkinter import filedialog, messagebox
@@ -5,6 +7,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from automacao_sshd import DadosSolicitante, ErroAutomacao, gerar_fichas_sshd
+from automacao_sshd.normalizacao import nome_arquivo_seguro
 
 
 ctk.set_appearance_mode("Dark")
@@ -35,7 +38,7 @@ class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
         self.root.title("Automação SSHD")
-        self.root.geometry("680x580")
+        self.root.geometry("680x660")
         self.root.resizable(False, False)
         self.root.configure(fg_color=COR_FUNDO)
 
@@ -47,6 +50,8 @@ class AutomacaoFichas:
                 pass
 
         self.caminho_base_mae = ctk.StringVar()
+        self.pasta_saida = ctk.StringVar()
+        self.ultimo_arquivo_gerado: Path | None = None
         self.setup_ui()
 
     def setup_ui(self):
@@ -106,11 +111,19 @@ class AutomacaoFichas:
 
         ctk.CTkLabel(
             card,
-            text="Planilha fonte",
+            text="Arquivos",
             font=fonte(15, "bold"),
             text_color=COR_TEXTO,
             anchor="w",
         ).grid(row=0, column=0, columnspan=2, sticky="ew", padx=16, pady=(14, 8))
+
+        ctk.CTkLabel(
+            card,
+            text="Planilha fonte",
+            font=fonte(12, "bold"),
+            text_color=COR_TEXTO,
+            anchor="w",
+        ).grid(row=1, column=0, columnspan=2, sticky="ew", padx=16, pady=(0, 5))
 
         self.entrada_arquivo = ctk.CTkEntry(
             card,
@@ -124,7 +137,7 @@ class AutomacaoFichas:
             placeholder_text_color=COR_TEXTO_SECUNDARIO,
             font=fonte(13),
         )
-        self.entrada_arquivo.grid(row=1, column=0, sticky="ew", padx=(16, 10), pady=(0, 16))
+        self.entrada_arquivo.grid(row=2, column=0, sticky="ew", padx=(16, 10), pady=(0, 12))
 
         ctk.CTkButton(
             card,
@@ -137,7 +150,42 @@ class AutomacaoFichas:
             hover_color=COR_VERDE_ESCURO,
             text_color="#052e16",
             font=fonte(14, "bold"),
-        ).grid(row=1, column=1, padx=(0, 16), pady=(0, 16))
+        ).grid(row=2, column=1, padx=(0, 16), pady=(0, 12))
+
+        ctk.CTkLabel(
+            card,
+            text="Pasta de saída",
+            font=fonte(12, "bold"),
+            text_color=COR_TEXTO,
+            anchor="w",
+        ).grid(row=3, column=0, columnspan=2, sticky="ew", padx=16, pady=(0, 5))
+
+        self.entrada_saida = ctk.CTkEntry(
+            card,
+            textvariable=self.pasta_saida,
+            placeholder_text="Usar mesma pasta da planilha fonte",
+            height=38,
+            corner_radius=12,
+            fg_color=COR_FUNDO,
+            border_color=COR_BORDA,
+            text_color=COR_TEXTO,
+            placeholder_text_color=COR_TEXTO_SECUNDARIO,
+            font=fonte(13),
+        )
+        self.entrada_saida.grid(row=4, column=0, sticky="ew", padx=(16, 10), pady=(0, 16))
+
+        ctk.CTkButton(
+            card,
+            text="Escolher",
+            command=self.selecionar_pasta_saida,
+            width=120,
+            height=38,
+            corner_radius=12,
+            fg_color=COR_VERDE,
+            hover_color=COR_VERDE_ESCURO,
+            text_color="#052e16",
+            font=fonte(14, "bold"),
+        ).grid(row=4, column=1, padx=(0, 16), pady=(0, 16))
 
     def _montar_card_solicitante(self, parent):
         card = self._criar_card(parent, row=2)
@@ -177,6 +225,23 @@ class AutomacaoFichas:
         )
         self.btn_limpar.grid(row=0, column=0, sticky="w")
 
+        self.btn_abrir = ctk.CTkButton(
+            actions,
+            text="Abrir arquivo",
+            command=self.abrir_arquivo_gerado,
+            height=42,
+            width=150,
+            corner_radius=14,
+            fg_color="#173526",
+            hover_color="#1f4f35",
+            border_width=1,
+            border_color=COR_BORDA,
+            text_color=COR_TEXTO,
+            font=fonte(14, "bold"),
+            state="disabled",
+        )
+        self.btn_abrir.grid(row=0, column=1, sticky="e", padx=(0, 14))
+
         self.btn_executar = ctk.CTkButton(
             actions,
             text="Gerar fichas SSHD",
@@ -189,7 +254,7 @@ class AutomacaoFichas:
             text_color="#052e16",
             font=fonte(16, "bold"),
         )
-        self.btn_executar.grid(row=0, column=1, sticky="e")
+        self.btn_executar.grid(row=0, column=2, sticky="e")
 
     def _montar_status(self, parent):
         status_card = self._criar_card(parent, row=4, pady=(0, 0))
@@ -265,21 +330,50 @@ class AutomacaoFichas:
         )
         if arquivo:
             self.caminho_base_mae.set(arquivo)
+            if not self.pasta_saida.get().strip():
+                self.pasta_saida.set(str(Path(arquivo).parent))
             self.status_label.configure(
                 text=f"Arquivo selecionado: {Path(arquivo).name}",
                 text_color=COR_VERDE,
             )
 
+    def selecionar_pasta_saida(self):
+        pasta = filedialog.askdirectory(title="Selecionar pasta de saída")
+        if pasta:
+            self.pasta_saida.set(pasta)
+            self.status_label.configure(
+                text=f"Pasta de saída: {Path(pasta).name}",
+                text_color=COR_VERDE,
+            )
+
     def limpar_campos(self):
         self.caminho_base_mae.set("")
+        self.pasta_saida.set("")
+        self.ultimo_arquivo_gerado = None
         for entrada in (self.entrada_nome, self.entrada_sshd, self.entrada_cargo):
             entrada.delete(0, "end")
         self.progress_bar.stop()
         self.progress_bar.set(0)
+        self.btn_abrir.configure(state="disabled")
         self.status_label.configure(
             text="Campos limpos. Pronto para iniciar.",
             text_color=COR_TEXTO_SECUNDARIO,
         )
+
+    def abrir_arquivo_gerado(self):
+        if not self.ultimo_arquivo_gerado or not self.ultimo_arquivo_gerado.exists():
+            messagebox.showwarning("Atenção", "Nenhum arquivo gerado foi encontrado para abrir.")
+            return
+
+        try:
+            if sys.platform.startswith("win"):
+                os.startfile(self.ultimo_arquivo_gerado)  # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", str(self.ultimo_arquivo_gerado)])
+            else:
+                subprocess.Popen(["xdg-open", str(self.ultimo_arquivo_gerado)])
+        except Exception as erro:
+            messagebox.showerror("Erro", f"Não foi possível abrir o arquivo: {erro}")
 
     def executar_processo(self):
         caminho_mae = self.caminho_base_mae.get()
@@ -301,10 +395,15 @@ class AutomacaoFichas:
             cargo=self.entrada_cargo.get(),
         )
 
+        pasta_saida = Path(self.pasta_saida.get().strip() or Path(caminho_mae).parent)
+        nome_saida = f"{nome_arquivo_seguro(Path(caminho_mae).stem)}_SSHD.xlsx"
+        caminho_saida = pasta_saida / nome_saida
+
         self.status_label.configure(text="Processando arquivo...", text_color=COR_VERDE)
         self.progress_bar.start()
         self.btn_executar.configure(state="disabled")
         self.btn_limpar.configure(state="disabled")
+        self.btn_abrir.configure(state="disabled")
         self.root.update()
 
         try:
@@ -312,18 +411,22 @@ class AutomacaoFichas:
                 caminho_planilha_geral=caminho_mae,
                 solicitante=solicitante,
                 caminho_template=caminho_template,
+                caminho_saida=caminho_saida,
             )
+            self.ultimo_arquivo_gerado = resultado.caminho_saida
 
             self.status_label.configure(
                 text=f"Concluído: {resultado.total_colaboradores} ficha(s) gerada(s).",
                 text_color=COR_VERDE,
             )
+            self.btn_abrir.configure(state="normal")
             messagebox.showinfo(
                 "Sucesso",
                 (
                     "Automação concluída!\n"
                     f"Fichas geradas: {resultado.total_colaboradores}\n"
-                    f"Arquivo salvo em:\n{resultado.caminho_saida}"
+                    f"Arquivo salvo em:\n{resultado.caminho_saida}\n\n"
+                    f"Relatório salvo em:\n{resultado.caminho_relatorio}"
                 ),
             )
 

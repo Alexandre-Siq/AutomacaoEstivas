@@ -3,22 +3,27 @@
 Projeto para gerar fichas de cadastramento SSHD no modelo padrão da Prefeitura a
 partir da planilha fonte de colaboradores.
 
-## Situacao atual
+## Situação atual
 
 Esta primeira versão implementa o fluxo da **planilha fonte**:
 
-1. O usuario seleciona a planilha de colaboradores em `.xlsx`.
-2. O usuario preenche:
+1. O usuário seleciona a planilha de colaboradores em `.xlsx`.
+2. O usuário escolhe a pasta de saída, ou mantém a mesma pasta da fonte.
+3. O usuário preenche:
    - Nome do Solicitante
    - SSHD
    - Cargo
-3. A aplicação gera um arquivo Excel com uma aba por colaborador.
-4. Cada aba preserva o layout do template `data/TEMPLATE_NOVO.xlsx`.
+4. A aplicação gera um arquivo Excel com uma aba por colaborador.
+5. A aplicação gera um relatório de validação em Excel.
+6. Cada aba preserva o layout do template `data/TEMPLATE_NOVO.xlsx`.
 
 A interface utiliza tema escuro com destaque verde, fonte Oswald e janela fixa
-compacta de 680x580, com status de processamento, ação para limpar os campos
+compacta de 680x660, com status de processamento, ação para limpar os campos
 antes de uma nova geração e o crédito `Desenvolvido por Alexandre Siqueira -
 Analista de Suporte`.
+
+Após a geração, o botão `Abrir arquivo` fica habilitado para abrir diretamente
+o Excel final.
 
 A Planilha de Médicos será adicionada como uma segunda origem assim que o
 de/para específico for confirmado.
@@ -36,6 +41,22 @@ A automação aceita os dois formatos atualmente usados no projeto:
 Quando a fonte contém mais de uma pessoa, o arquivo final é gerado com uma aba
 por profissional, sempre copiando o template oficial antes de preencher os
 dados daquela pessoa.
+
+## Relatório de validação
+
+A cada execução é criado um relatório ao lado do arquivo final, com o sufixo
+`_RELATORIO_VALIDACAO.xlsx`.
+
+O relatório contém:
+
+- status geral da execução;
+- caminho da fonte usada;
+- total de profissionais encontrados;
+- total de pendências;
+- detalhes por linha/profissional.
+
+Se houver pendências obrigatórias, a geração das fichas é bloqueada e o
+relatório informa quais campos precisam ser corrigidos.
 
 ## Campos fixos no modelo da Prefeitura
 
