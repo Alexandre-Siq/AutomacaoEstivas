@@ -29,6 +29,10 @@ O executável gerado com PyInstaller exibe uma splash screen durante o
 carregamento inicial e fecha automaticamente quando a janela principal fica
 pronta.
 
+Para gerar o executável com splash screen, o Python usado no build precisa ter
+`tkinter` disponível. No Windows, isso normalmente já vem no instalador oficial
+do Python.
+
 A Planilha de Médicos será adicionada como uma segunda origem assim que o
 de/para específico for confirmado.
 
@@ -136,7 +140,7 @@ antes das linhas de dados.
 No Windows, dentro da pasta `data`, execute:
 
 ```bash
-pyinstaller gerador_planilhas.spec
+python -m PyInstaller gerador_planilhas.spec
 ```
 
 O arquivo gerado deve incluir o template e o icone usados pela interface.
