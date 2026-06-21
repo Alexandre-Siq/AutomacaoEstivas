@@ -34,6 +34,15 @@ def caminho_recurso(nome_arquivo):
     return base / nome_arquivo
 
 
+def fechar_splash_screen():
+    try:
+        import pyi_splash
+
+        pyi_splash.close()
+    except Exception:
+        pass
+
+
 class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
@@ -53,6 +62,8 @@ class AutomacaoFichas:
         self.pasta_saida = ctk.StringVar()
         self.ultimo_arquivo_gerado: Path | None = None
         self.setup_ui()
+        self.root.update_idletasks()
+        fechar_splash_screen()
 
     def setup_ui(self):
         main_frame = ctk.CTkFrame(self.root, fg_color=COR_FUNDO)

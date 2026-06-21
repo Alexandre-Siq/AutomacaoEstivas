@@ -25,6 +25,10 @@ Analista de Suporte`.
 Após a geração, o botão `Abrir arquivo` fica habilitado para abrir diretamente
 o Excel final.
 
+O executável gerado com PyInstaller exibe uma splash screen durante o
+carregamento inicial e fecha automaticamente quando a janela principal fica
+pronta.
+
 A Planilha de Médicos será adicionada como uma segunda origem assim que o
 de/para específico for confirmado.
 
@@ -124,6 +128,7 @@ antes das linhas de dados.
 - `data/TEMPLATE_NOVO.xlsx`: template oficial usado como base.
 - `data/criar_template_prefeitura.py`: recria o template a partir do modelo
   original.
+- `data/splash_sshd.png`: imagem exibida na abertura do executável.
 - `data/automacao_sshd/`: nucleo de leitura, validacao, mapeamento e escrita.
 
 ## Geracao de executavel

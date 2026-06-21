@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from pathlib import Path
 
+from PyInstaller.building.api import Splash
 from PyInstaller.utils.hooks import collect_all
 
 datas = []
@@ -31,9 +32,18 @@ a = Analysis(
 )
 pyz = PYZ(a.pure)
 
+splash = Splash(
+    'splash_sshd.png',
+    binaries=a.binaries,
+    datas=a.datas,
+    text_pos=None,
+)
+
 exe = EXE(
     pyz,
     a.scripts,
+    splash,
+    splash.binaries,
     a.binaries,
     a.datas,
     [],
