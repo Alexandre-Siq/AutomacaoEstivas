@@ -94,7 +94,7 @@ class AutomacaoFichas:
 
         ctk.CTkLabel(
             header,
-            text="Créditos: Alexandre Siqueira - Analista de Suporte",
+            text="Desenvolvido por Alexandre Siqueira - Analista de Suporte",
             font=fonte(12),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
