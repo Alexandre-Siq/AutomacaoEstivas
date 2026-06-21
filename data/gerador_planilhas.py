@@ -23,6 +23,7 @@ COR_TEXTO_SECUNDARIO = "#9fb3a7"
 COR_ALERTA = "#f97316"
 COR_ERRO = "#ef4444"
 FONTE_PADRAO = "Oswald"
+VERSAO_APP = "Versão 2.0"
 
 
 def fonte(tamanho, peso="normal"):
@@ -110,7 +111,7 @@ class AutomacaoFichas:
 
         ctk.CTkLabel(
             header,
-            text="Desenvolvido por Alexandre Siqueira - Analista de Suporte",
+            text=f"{VERSAO_APP} | Desenvolvido por Alexandre Siqueira - Analista de Suporte",
             font=fonte(12),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",

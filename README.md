@@ -5,7 +5,7 @@ partir da planilha fonte de colaboradores.
 
 ## Situação atual
 
-Esta primeira versão implementa o fluxo da **planilha fonte**:
+Esta é a **Versão 2.0** do aplicativo e implementa o fluxo da **planilha fonte**:
 
 1. O usuário seleciona a planilha de colaboradores em `.xlsx`.
 2. O usuário escolhe a pasta de saída, ou mantém a mesma pasta da fonte.
@@ -19,8 +19,8 @@ Esta primeira versão implementa o fluxo da **planilha fonte**:
 
 A interface utiliza tema escuro com destaque verde, fonte Oswald e janela fixa
 compacta de 680x700, com status de processamento, ação para limpar os campos
-antes de uma nova geração e o crédito `Desenvolvido por Alexandre Siqueira -
-Analista de Suporte`.
+antes de uma nova geração, versão visível e o crédito `Desenvolvido por
+Alexandre Siqueira - Analista de Suporte`.
 
 Após a geração, o botão `Abrir arquivo` fica habilitado para abrir diretamente
 o Excel final.
