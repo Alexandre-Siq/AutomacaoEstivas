@@ -15,8 +15,9 @@ Esta primeira versao implementa o fluxo da **Planilha Geral**:
 3. A aplicacao gera um arquivo Excel com uma aba por colaborador.
 4. Cada aba preserva o layout do template `data/TEMPLATE_NOVO.xlsx`.
 
-A interface utiliza tema escuro com destaque verde, cards por etapa, status de
-processamento e acao para limpar os campos antes de uma nova geracao.
+A interface utiliza tema escuro com destaque verde em uma janela fixa e
+compacta, com status de processamento e acao para limpar os campos antes de uma
+nova geracao.
 
 A Planilha de Medicos sera adicionada como uma segunda origem assim que o
 de/para especifico for confirmado.
