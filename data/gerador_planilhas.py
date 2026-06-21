@@ -34,8 +34,8 @@ def caminho_recurso(nome_arquivo):
 class AutomacaoFichas:
     def __init__(self, root):
         self.root = root
-        self.root.title("Automacao SSHD")
-        self.root.geometry("680x560")
+        self.root.title("Automação SSHD")
+        self.root.geometry("680x580")
         self.root.resizable(False, False)
         self.root.configure(fg_color=COR_FUNDO)
 
@@ -91,6 +91,14 @@ class AutomacaoFichas:
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
         ).grid(row=1, column=1, sticky="nw", pady=(2, 0))
+
+        ctk.CTkLabel(
+            header,
+            text="Créditos: Alexandre Siqueira - Analista de Suporte",
+            font=fonte(12),
+            text_color=COR_TEXTO_SECUNDARIO,
+            anchor="w",
+        ).grid(row=2, column=1, sticky="nw", pady=(2, 0))
 
     def _montar_card_arquivo(self, parent):
         card = self._criar_card(parent, row=1)
@@ -208,7 +216,7 @@ class AutomacaoFichas:
 
         ctk.CTkLabel(
             status_card,
-            text="Template preservado | Genero e orientacao sexual: não informado",
+            text="Template preservado | Gênero e orientação sexual: não informado",
             font=fonte(12),
             text_color=COR_TEXTO_SECUNDARIO,
             anchor="w",
@@ -277,14 +285,14 @@ class AutomacaoFichas:
         caminho_mae = self.caminho_base_mae.get()
 
         if not caminho_mae:
-            messagebox.showwarning("Atencao", "Selecione a planilha fonte primeiro.")
+            messagebox.showwarning("Atenção", "Selecione a planilha fonte primeiro.")
             return
 
         caminho_template = caminho_recurso("TEMPLATE_NOVO.xlsx")
         if not caminho_template.exists():
             caminho_template = Path(__file__).resolve().parent / "TEMPLATE_NOVO.xlsx"
         if not caminho_template.exists():
-            messagebox.showerror("Erro", "Arquivo 'TEMPLATE_NOVO.xlsx' nao encontrado.")
+            messagebox.showerror("Erro", "Arquivo 'TEMPLATE_NOVO.xlsx' não encontrado.")
             return
 
         solicitante = DadosSolicitante(
@@ -307,20 +315,20 @@ class AutomacaoFichas:
             )
 
             self.status_label.configure(
-                text=f"Concluido: {resultado.total_colaboradores} ficha(s) gerada(s).",
+                text=f"Concluído: {resultado.total_colaboradores} ficha(s) gerada(s).",
                 text_color=COR_VERDE,
             )
             messagebox.showinfo(
                 "Sucesso",
                 (
-                    "Automacao concluida!\n"
+                    "Automação concluída!\n"
                     f"Fichas geradas: {resultado.total_colaboradores}\n"
                     f"Arquivo salvo em:\n{resultado.caminho_saida}"
                 ),
             )
 
         except ErroAutomacao as erro:
-            self.status_label.configure(text="Nao foi possivel gerar as fichas.", text_color=COR_ALERTA)
+            self.status_label.configure(text="Não foi possível gerar as fichas.", text_color=COR_ALERTA)
             messagebox.showerror("Erro", str(erro))
         except Exception as erro:
             self.status_label.configure(text="Erro inesperado no processamento.", text_color=COR_ERRO)

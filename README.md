@@ -16,8 +16,9 @@ Esta primeira versao implementa o fluxo da **Planilha Geral**:
 4. Cada aba preserva o layout do template `data/TEMPLATE_NOVO.xlsx`.
 
 A interface utiliza tema escuro com destaque verde, fonte Oswald e janela fixa
-compacta de 680x560, com status de processamento e acao para limpar os campos
-antes de uma nova geracao.
+compacta de 680x580, com status de processamento, ação para limpar os campos
+antes de uma nova geração e créditos para Alexandre Siqueira, Analista de
+Suporte.
 
 A Planilha de Medicos sera adicionada como uma segunda origem assim que o
 de/para especifico for confirmado.
