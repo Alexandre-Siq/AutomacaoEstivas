@@ -60,6 +60,24 @@ python3 -m pip install -r requirements.txt
 python3 data/gerador_planilhas.py
 ```
 
+## Solucao de problemas
+
+### Erro: nao foi possivel localizar o cabecalho da Planilha Geral
+
+O leitor procura, nas primeiras 50 linhas de todas as abas, colunas equivalentes
+a:
+
+- Nome Colaborador
+- CPF
+- Cargo
+
+Tambem sao aceitas variacoes como `Nome do Colaborador`, `Nome Completo`,
+`Cargo/Funcao` e `Funcao`.
+
+Se o erro aparecer, confira se a planilha selecionada e realmente a Planilha
+Geral de colaboradores e se esses campos aparecem em uma linha de cabecalho
+antes das linhas de dados.
+
 ## Arquivos principais
 
 - `data/gerador_planilhas.py`: interface grafica.
