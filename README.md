@@ -143,4 +143,18 @@ No Windows, dentro da pasta `data`, execute:
 python -m PyInstaller gerador_planilhas.spec
 ```
 
-O arquivo gerado deve incluir o template e o icone usados pela interface.
+Para abrir mais rapido, o projeto usa o modo `onedir` do PyInstaller. O
+resultado fica em:
+
+```text
+data/dist/gerador_planilhas/
+```
+
+Distribua a pasta `gerador_planilhas` inteira para a equipe e oriente o uso do
+arquivo:
+
+```text
+data/dist/gerador_planilhas/gerador_planilhas.exe
+```
+
+Nao envie somente o `.exe`, pois as dependencias ficam na mesma pasta.

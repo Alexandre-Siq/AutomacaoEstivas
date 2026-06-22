@@ -43,9 +43,6 @@ exe = EXE(
     pyz,
     a.scripts,
     splash,
-    splash.binaries,
-    a.binaries,
-    a.datas,
     [],
     name='gerador_planilhas',
     debug=False,
@@ -61,4 +58,15 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['icone_estivas.ico'],
+)
+
+coll = COLLECT(
+    exe,
+    splash.binaries,
+    a.binaries,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='gerador_planilhas',
 )
