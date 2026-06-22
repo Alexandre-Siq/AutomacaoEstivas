@@ -158,3 +158,7 @@ data/dist/gerador_planilhas/gerador_planilhas.exe
 ```
 
 Nao envie somente o `.exe`, pois as dependencias ficam na mesma pasta.
+
+Antes de compactar, copie tambem o arquivo `data/LEIA-ME_USUARIOS.txt` para
+dentro da pasta `data/dist/gerador_planilhas/`, para que os usuarios tenham as
+instrucoes de uso junto do executavel.
