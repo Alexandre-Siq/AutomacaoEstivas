@@ -53,15 +53,19 @@ O arquivo principal tera nome semelhante a:
 
    nome_da_planilha_SSHD.xlsx
 
-O relatorio tera nome semelhante a:
+O relatorio sera unico na pasta de saida e tera o nome:
 
-   nome_da_planilha_SSHD_RELATORIO_VALIDACAO.xlsx
+   RELATORIO_VALIDACAO_SSHD.xlsx
+
+Cada nova utilizacao do gerador acrescenta uma nova execucao nesse
+mesmo relatorio.
 
 O relatorio mostra:
 
    - Status da validacao
    - Total de profissionais encontrados
    - Total de pendencias
+   - Historico de execucoes
    - Detalhes por linha/profissional
 
 ============================================================

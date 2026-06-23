@@ -52,16 +52,23 @@ dados daquela pessoa.
 
 ## Relatório de validação
 
-A cada execução é criado um relatório ao lado do arquivo final, com o sufixo
-`_RELATORIO_VALIDACAO.xlsx`.
+A aplicação mantém um relatório único por pasta de saída:
+
+```text
+RELATORIO_VALIDACAO_SSHD.xlsx
+```
+
+A cada utilização do gerador, uma nova execução é acrescentada nesse mesmo
+arquivo.
 
 O relatório contém:
 
+- aba `Execucoes`, com uma linha por uso do gerador;
+- aba `Detalhes`, com os profissionais validados ou pendências daquela execução;
 - status geral da execução;
 - caminho da fonte usada;
 - total de profissionais encontrados;
-- total de pendências;
-- detalhes por linha/profissional.
+- total de pendências.
 
 Se houver pendências obrigatórias, a geração das fichas é bloqueada e o
 relatório informa quais campos precisam ser corrigidos.

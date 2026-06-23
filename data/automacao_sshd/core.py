@@ -46,7 +46,7 @@ def gerar_fichas_sshd(
         caminho_saida = caminho_origem.with_name(nome_saida)
     caminho_saida = Path(caminho_saida)
 
-    caminho_relatorio = caminho_saida.with_name(f"{caminho_saida.stem}_RELATORIO_VALIDACAO.xlsx")
+    caminho_relatorio = caminho_saida.with_name("RELATORIO_VALIDACAO_SSHD.xlsx")
     pendencias = coletar_pendencias_colaboradores(colaboradores)
     caminho_relatorio_gerado = gerar_relatorio_validacao(
         caminho_relatorio=caminho_relatorio,
