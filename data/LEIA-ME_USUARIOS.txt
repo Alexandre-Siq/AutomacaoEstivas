@@ -1,0 +1,114 @@
+AUTOMACAO SSHD - VERSAO 2.0
+Desenvolvido por Alexandre Siqueira - Analista de Suporte
+
+============================================================
+COMO USAR
+============================================================
+
+1. Extraia o arquivo ZIP recebido.
+
+2. Abra a pasta:
+
+   gerador_planilhas
+
+3. Execute o arquivo:
+
+   gerador_planilhas.exe
+
+4. Na tela do sistema, selecione:
+
+   - Planilha fonte:
+     Arquivo Excel com os dados dos profissionais.
+
+   - Pasta de saida:
+     Pasta onde serao salvos o arquivo final e o relatorio.
+     Se nao escolher uma pasta, o sistema usara a mesma pasta da planilha fonte.
+
+5. Preencha os dados do solicitante:
+
+   - Nome
+   - SSHD
+   - Cargo
+
+6. Clique em:
+
+   Gerar fichas SSHD
+
+7. Ao final, o sistema ira gerar:
+
+   - Arquivo final com as fichas SSHD
+   - Relatorio de validacao
+
+8. Se a geracao for concluida com sucesso, o botao:
+
+   Abrir arquivo
+
+   ficara habilitado para abrir diretamente o Excel final.
+
+============================================================
+ARQUIVOS GERADOS
+============================================================
+
+O arquivo principal tera nome semelhante a:
+
+   nome_da_planilha_SSHD.xlsx
+
+O relatorio sera unico na pasta de saida e tera o nome:
+
+   RELATORIO_VALIDACAO_SSHD.xlsx
+
+Cada nova utilizacao do gerador acrescenta uma nova execucao nesse
+mesmo relatorio.
+
+O relatorio mostra:
+
+   - Status da validacao
+   - Total de profissionais encontrados
+   - Total de pendencias
+   - Historico de execucoes
+   - Detalhes por linha/profissional
+
+============================================================
+ATENCAO
+============================================================
+
+Nao mova o arquivo gerador_planilhas.exe para fora da pasta.
+
+O programa depende dos arquivos internos que ficam junto dele,
+principalmente a pasta:
+
+   _internal
+
+Se quiser compartilhar com outra pessoa, envie a pasta inteira
+gerador_planilhas compactada em ZIP.
+
+============================================================
+EM CASO DE ERRO
+============================================================
+
+1. Confira se a planilha fonte esta no formato .xlsx.
+
+2. Confira se os campos obrigatorios estao preenchidos.
+
+3. Abra o relatorio de validacao gerado pelo sistema.
+
+4. Corrija os dados indicados no relatorio.
+
+5. Execute a automacao novamente.
+
+Se o problema continuar, envie ao suporte:
+
+   - A mensagem de erro exibida
+   - O relatorio de validacao
+   - O nome da planilha fonte utilizada
+
+============================================================
+OBSERVACOES IMPORTANTES
+============================================================
+
+- O sistema gera uma aba por profissional.
+- O modelo oficial da Prefeitura e preservado.
+- Os campos Genero e Orientacao Sexual sao preenchidos automaticamente
+  como "nao informado".
+- Os campos COMPLEXO HOSPITALAR DOS ESTIVADORES e SMS sao fixos.
+
